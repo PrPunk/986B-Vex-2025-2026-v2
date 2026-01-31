@@ -21,13 +21,16 @@ const int accelStep = 10;
 const int accelSec = 300;
 
 float dSpeed = 1;
+// 48 teeth red
+// 36 teeth green
+// 10.22 inch circumference
 bool slowDrive = false;
 double leftVeloc = 0;
 double rightVeloc = 0;
 int autonMode = 2;
 bool intakeOn = false;
-float degPerInch = 47.012;
-float inchPerDeg = 0.1069014;
+float degPerInch = 158.5127201; // old robot 47.012
+float inchPerDeg = 0.0063086; // old robot 0.1069014
 
 int getSpeed(int percentComplete) {
   return 100 - ((percentComplete^8)*(10^14));
