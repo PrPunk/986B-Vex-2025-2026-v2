@@ -15,52 +15,154 @@ BrainDisplay brainDisplay;
 // A global instance of competition
 competition Competition;
 
-int autonMode = 1;
+vex::timer accelTimer;
+
+const int accelStep = 10;
+const int accelSec = 300;
+
+float dSpeed = 1;
+bool slowDrive = false;
+double leftVeloc = 0;
+double rightVeloc = 0;
+int autonMode = 2;
 bool intakeOn = false;
 float degPerInch = 47.012;
 float inchPerDeg = 0.1069014;
 
+int getSpeed(int percentComplete) {
+  return 100 - ((percentComplete^8)*(10^14));
+}
+
+int sign(int x) {
+  return (x > 0) - (x < 0);
+}
+
+float accelSpeed(int speed) {
+  return speed/20 + 100;
+}
+
 void spinIntake() {
   intakeL.spin(fwd, 100, pct);
-  intakeR.spin(fwd, 100, pct);
+  // intakeR.spin(fwd, 100, pct);
   outake2.spin(fwd, 100, pct);
 }
 
 void stopIntake() {
   intakeL.stop(brake);
-  intakeR.stop(brake);
+  // intakeR.stop(brake);
   outake2.stop(brake);
 }
 
 void spinIntakeOutake(int msecs) {
   intakeL.spin(fwd, 100, pct);
-  intakeR.spin(fwd, 100, pct);
+  // intakeR.spin(fwd, 100, pct);
   outake1.spin(fwd, 100, pct);
   outake2.spin(fwd, 100, pct);
+  outake3.spin(fwd, 100, pct);
   wait (msecs, vex::timeUnits::msec);
   intakeL.stop(brake);
-  intakeR.stop(brake);
+  // intakeR.stop(brake);
   outake1.stop(brake);
   outake2.stop(brake);
+  outake3.stop(brake);
+}
+
+void reverseOutakeIntake(int msecs) {
+  intakeL.spin(fwd, -100, pct);
+  outake1.spin(fwd, -100, pct);
+  outake2.spin(fwd, -100, pct);
+  outake3.spin(fwd, -100, pct);
+  wait (msecs, vex::timeUnits::msec);
+  intakeL.stop(brake);
+  outake1.stop(brake);
+  outake2.stop(brake);
+  outake3.stop(brake);
+}
+
+void reverseOutake(int msecs) {
+  outake1.spin(fwd, -100, pct);
+  outake2.spin(fwd, -100, pct);
+  outake3.spin(fwd, -100, pct);
+  wait (msecs, vex::timeUnits::msec);
+  outake1.stop(brake);
+  outake2.stop(brake);
+  outake3.stop(brake);
 }
 
 void spinIntakePush(int msecs) {
   intakeL.spin(fwd, 100, pct);
-  intakeR.spin(fwd, 100, pct);
+  // intakeR.spin(fwd, 100, pct);
   outake2.spin(fwd, 100, pct);
-  driveTrain.spin(fwd, 5, pct);
+  driveTrain.spin(fwd, 10, pct);
   wait (msecs, vex::timeUnits::msec);
   intakeL.stop(brake);
-  intakeR.stop(brake);
+  // intakeR.stop(brake);
   outake2.stop(brake);
   driveTrain.stop(brake);
 }
 
+// void moveStraight(float distance, int speed) {
+//   int degreesToTurn = degPerInch * distance;
+//   // driveTrain.resetPosition();
+//   // wait(100, vex::timeUnits::msec);
+//   // driveTrain.spinToPosition(degreesToTurn, deg, speed, vex::velocityUnits::pct);
+//   // driveTrain.stop(brake);
+//   leftSide.resetPosition();
+//   rightSide.resetPosition();
+//   wait(100, vex::timeUnits::msec);
+//   if (distance > 0) {
+//     // Move Forward
+//     while (leftSide.position(deg) <= degreesToTurn && rightSide.position(deg) <= degreesToTurn) {
+//       int calcSpeed = int(float(getSpeed(int(abs(leftSide.position(deg)*100/degreesToTurn)))*speed)/100);
+//       leftSide.spin(fwd, calcSpeed, pct);
+//       rightSide.spin(fwd, calcSpeed, pct);
+//       wait(calcSpeed/10, msec);
+//     }
+//     leftSide.stop(brake);
+//     rightSide.stop(brake);
+//   } else if (distance < 0) {
+//     // Turn clockwise
+//     while (leftSide.position(deg) >= degreesToTurn && rightSide.position(deg) >= degreesToTurn) {
+//       int calcSpeed = int(float(getSpeed(int(abs(leftSide.position(deg)*100/degreesToTurn)))*speed)/100);
+//       leftSide.spin(fwd, -calcSpeed, pct);
+//       rightSide.spin(fwd, -calcSpeed, pct);
+//       wait(calcSpeed/10, msec);
+//     }
+//     leftSide.stop(brake);
+//     rightSide.stop(brake);
+//   }
+// }
+
 void moveStraight(float distance, int speed) {
-  int degreesToTurn = degPerInch * distance;
-  driveTrain.resetPosition();
-  wait(100, vex::timeUnits::msec);
-  driveTrain.spinToPosition(degreesToTurn, deg, speed, vex::velocityUnits::pct);
+  if (distance == 0) return;
+
+  int direction = (distance > 0) ? 1 : -1;
+  int degreesToTurn = abs(degPerInch * distance);
+
+  leftSide.resetPosition();
+  rightSide.resetPosition();
+  wait(50, msec);
+
+  while ((abs(leftSide.position(deg)) + abs(rightSide.position(deg))) / 2 < degreesToTurn) {
+    int percent = (abs(leftSide.position(deg)) * 100) / degreesToTurn;
+    int calcSpeed = speed * (100 - percent) / 100;
+    calcSpeed = std::max(10, calcSpeed);
+
+    leftSide.spin(fwd, direction * calcSpeed, pct);
+    rightSide.spin(fwd, direction * calcSpeed, pct);
+
+    wait(10, msec);
+  }
+
+  leftSide.stop(brake);
+  rightSide.stop(brake);
+}
+
+
+void moveTime(float seconds, int speed) {
+  driveTrain.spin(fwd, speed, pct);
+  wait(seconds * 1000, vex::timeUnits::msec);
+  driveTrain.stop(brake);
 }
 
 void turnRobot(int degrees, int speed) {
@@ -116,36 +218,102 @@ void autonomous(void) {
   if (autonMode == 1) {
     // Left Side Auton
     spinIntake();
-    moveStraight(27, 40);
+    moveStraight(33.25, 30);
     stopIntake();
-    turnRobot(115, 30);
-    moveStraight(-13.5, 40);
-    spinIntakeOutake(3000);
-    moveStraight(46.5, 60);
-    turnRobot(50, 20);
-    moveStraight(13, 15);
-    spinIntakePush(2500);
+    turnRobot(100, 20);
     outakePistons.set(1);
-    moveStraight(-29, 15);
+    moveStraight(-15, 20);
+    moveTime(0.25,-20);
+    spinIntakeOutake(1500);
+    turnRobot(1,1);
+    intakePistons.set(1);
+    //moveStraight(27, 15);
+    moveTime(2, 20);
+    spinIntakePush(2500);
+    turnRobot(-1,1);
+    moveStraight(-15, 15);
+    intakePistons.set(0);
+    moveTime(2, -15);
+    spinIntakeOutake(1500);
+    reverseOutake(300);
     spinIntakeOutake(10000);
+
+    // spinIntake();
+    // moveStraight(8.5, 20);
+    // turnRobot(-90, 30);
+    // moveStraight(27, 25);
+    // turnRobot(152, 25);
+    // stopIntake();
+    // moveStraight(-13, 20);
+    // spinIntakeOutake(2000);
+    // moveStraight(48, 50);
+    // turnRobot(43, 30);
+    // intakePistons.set(1);
+    // moveStraight(12, 20);
+    // spinIntakePush(2500);
+    // moveStraight(-15, 15);
+    // intakePistons.set(0);
+    // outakePistons.set(1);
+    // moveTime(2, -15);
+    // spinIntakeOutake(1500);
+    // reverseOutake(300);
+    // spinIntakeOutake(10000);
 
   } else if (autonMode == 2) {
     // Right Side Auton
-    moveStraight(32, 30);
-    turnRobot(-85, 30);
-    moveStraight(13, 15);
+    // spinIntake();
+    // moveStraight(33, 30);
+    // stopIntake();
+    // turnRobot(-91, 30);
+    // outakePistons.set(1);
+    // moveStraight(-19, 20);
+    // spinIntakeOutake(1500);
+    // intakePistons.set(1);
+    // //moveStraight(27, 15);
+    // moveTime(1, 25);
+    // spinIntakePush(2500);
+    // moveStraight(-15, 15);
+    // intakePistons.set(0);
+    // moveTime(2, -15);
+    // spinIntakeOutake(1500);
+    // reverseOutake(300);
+    // spinIntakeOutake(10000);
+
+    spinIntake();
+    moveStraight(8.5, 30);
+    turnRobot(90, 30);
+    moveStraight(26.5, 35);
+    turnRobot(41, 25);
+    stopIntake();
+    moveStraight(12, 35);
+    reverseOutakeIntake(2000);
+    moveStraight(-43, 90);
+    turnRobot(140, 30);
+    intakePistons.set(1);
+    moveStraight(5, 35);
     spinIntakePush(2500);
-    outakePistons.set(1);
-    moveStraight(-29, 15);
+    moveStraight(-15, 25);
+    intakePistons.set(0);
+    outakePistons.set(1); 
+    moveTime(2, -15);
+    spinIntakeOutake(1500);
+    reverseOutake(300);
     spinIntakeOutake(10000);
   } else if (autonMode == 3) {
     // Skills Auton
-    intakeL.spin(fwd, 100, pct);
-    intakeR.spin(fwd, 100, pct);
-    outake2.spin(fwd, 100, pct);
-    moveStraight(28, 30);//30
+    spinIntake();
+    moveStraight(32, 30);
+    stopIntake();
+    turnRobot(-85, 30);
+    outakePistons.set(1);
+    moveStraight(-16, 15);
+    spinIntakeOutake(1500);
+    moveStraight(29, 15);
+    spinIntakePush(3000);
+    moveStraight(-29, 15);
+    spinIntakeOutake(10000);
   } else {
-    moveStraight(20, 30);
+    moveStraight(20, 100);
   }
 }
 
@@ -163,36 +331,88 @@ void usercontrol(void) {
   // User control code here, inside the loop
   while (1) {
 
-    // Tank drive controls
-    L1.spin(fwd, (CT1.Axis2.value()/1.270), pct);
-    L2.spin(fwd, (CT1.Axis2.value()/1.270), pct);
-    L3.spin(fwd, (CT1.Axis2.value()/1.270), pct);
-    R1.spin(fwd, (CT1.Axis3.value()/1.270), pct);
-    R2.spin(fwd, (CT1.Axis3.value()/1.270), pct);
-    R3.spin(fwd, (CT1.Axis3.value()/1.270), pct);
+    if (!slowDrive) {
+      // Tank drive controls
+      L1.spin(fwd, (CT1.Axis2.value()*dSpeed/1.270), pct);
+      L2.spin(fwd, (CT1.Axis2.value()*dSpeed/1.270), pct);
+      L3.spin(fwd, (CT1.Axis2.value()*dSpeed/1.270), pct);
+      R1.spin(fwd, (CT1.Axis3.value()*dSpeed/1.270), pct);
+      R2.spin(fwd, (CT1.Axis3.value()*dSpeed/1.270), pct);
+      R3.spin(fwd, (CT1.Axis3.value()*dSpeed/1.270), pct);
+    } else {
+      //printf("%d, %d\n", CT1.Axis2.value(), CT1.Axis3.value()); 127 to -127
+      
+      if (accelTimer.time(vex::timeUnits::msec) >= accelStep) {
+        accelTimer.reset();
+
+        int leftTarget  = CT1.Axis2.value() * 100 / 127;
+        int rightTarget = CT1.Axis3.value() * 100 / 127;
+
+        // Time step in seconds
+        float dt = accelStep / 1000.0f;
+        
+        // Get acceleration based on current speed
+        float leftAccelMax  = accelSpeed(leftVeloc)  * dt;
+        float rightAccelMax = accelSpeed(rightVeloc) * dt;
+        // Ramp LEFT
+        int leftError = leftTarget - leftVeloc;
+        if (abs(leftError) > leftAccelMax) {
+          leftVeloc += sign(leftError) * leftAccelMax;
+        } else {
+          leftVeloc = leftTarget;
+        }
+
+        // Ramp RIGHT
+        int rightError = rightTarget - rightVeloc;
+        if (abs(rightError) > rightAccelMax) {
+          rightVeloc += sign(rightError) * rightAccelMax;
+        } else {
+          rightVeloc = rightTarget;
+        }
+
+        leftSide.spin(fwd, int(leftVeloc), pct);
+        rightSide.spin(fwd, int(rightVeloc), pct);
+      }
+
+      // leftVeloc += CT1.Axis2.value()/5;
+      // rightVeloc += CT1.Axis3.value()/5;
+      // leftVeloc /= 1.2;
+      // rightVeloc /= 1.2;
+      // L1.spin(fwd, leftVeloc, pct);
+      // L2.spin(fwd, leftVeloc, pct);
+      // L3.spin(fwd, leftVeloc, pct);
+      // R1.spin(fwd, rightVeloc, pct);
+      // R2.spin(fwd, rightVeloc, pct);
+      // R3.spin(fwd, rightVeloc, pct);
+      
+    }
+    
     
     // Intake and outake controls
     if (CT1.ButtonR2.pressing()) {
       // Starts sucking in for the intake
       // Starts spitting out for outake
       intakeL.spin(fwd, 100, pct);
-      intakeR.spin(fwd, 100, pct);
+      // intakeR.spin(fwd, 100, pct);
       outake1.spin(fwd, 100, pct);
       outake2.spin(fwd, 100, pct);
+      outake3.spin(fwd, 100, pct);
       intakeOn = true;
     } else if (CT1.ButtonR1.pressing()) {
       // Stops sucking in and starts spitting out for intake
       // Stops spitting out and start sucking in for outake
       intakeL.spin(fwd, -100, pct);
-      intakeR.spin(fwd, -100, pct);
+      // intakeR.spin(fwd, -100, pct);
       outake1.spin(fwd, -100, pct);
       outake2.spin(fwd, -100, pct);
+      outake3.spin(fwd, -100, pct);
       intakeOn = false;
     } else if (!intakeOn) {
       intakeL.stop(coast);
-      intakeR.stop(coast);
+      // intakeR.stop(coast);
       outake1.stop(coast);
       outake2.stop(coast);
+      outake3.stop(coast);
     }
 
     if (CT1.ButtonDown.pressing()) {
@@ -201,11 +421,29 @@ void usercontrol(void) {
       outakePistons.set(1);
     }
 
+    if (CT1.ButtonX.pressing()) {
+      intakePistons.set(0);
+    } else if (CT1.ButtonB.pressing()) {
+      intakePistons.set(1);
+    }
+
     // Eliminates the judges if they give a bad score for our robot.
     if (CT1.ButtonLeft.pressing()) {
-      pnu2.set(1);
+      descoreArm.set(1);
+    } else if (CT1.ButtonRight.pressing()) {
+      descoreArm.set(0);
+    }
+
+    if (CT1.ButtonL2.pressing()) {
+      dSpeed = 0.3;
     } else {
-      pnu2.set(0);
+      dSpeed = 1;
+    }
+
+    if (CT1.ButtonY.pressing() && CT1.ButtonB.pressing()) {
+      slowDrive = true;
+    } else if (CT1.ButtonY.pressing() && CT1.ButtonX.pressing()) {
+      slowDrive = false;
     }
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
