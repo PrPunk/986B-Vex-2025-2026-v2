@@ -13,7 +13,7 @@ extern motor R2;
 extern motor R3;
 extern motor intake;
 extern motor outakeTop;
-extern motor outake2;
+extern motor outakeBottom;
 extern motor outakeChainLift;
 extern digital_out outakePistons;
 extern digital_out intakePistons;

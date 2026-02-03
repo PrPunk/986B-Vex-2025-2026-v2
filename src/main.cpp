@@ -47,60 +47,60 @@ float accelSpeed(int speed) {
 void spinIntake() {
   intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
-  outake2.spin(fwd, 100, pct);
+  outakeBottom.spin(fwd, 100, pct);
 }
 
 void stopIntake() {
   intake.stop(brake);
   // intakeR.stop(brake);
-  outake2.stop(brake);
+  outakeBottom.stop(brake);
 }
 
 void spinIntakeOutake(int msecs) {
   intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
   outakeTop.spin(fwd, 100, pct);
-  outake2.spin(fwd, 100, pct);
+  outakeBottom.spin(fwd, 100, pct);
   outakeChainLift.spin(fwd, 100, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
   // intakeR.stop(brake);
   outakeTop.stop(brake);
-  outake2.stop(brake);
+  outakeBottom.stop(brake);
   outakeChainLift.stop(brake);
 }
 
 void reverseOutakeIntake(int msecs) {
   intake.spin(fwd, -100, pct);
   outakeTop.spin(fwd, -100, pct);
-  outake2.spin(fwd, -100, pct);
+  outakeBottom.spin(fwd, -100, pct);
   outakeChainLift.spin(fwd, -100, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
   outakeTop.stop(brake);
-  outake2.stop(brake);
+  outakeBottom.stop(brake);
   outakeChainLift.stop(brake);
 }
 
 void reverseOutake(int msecs) {
   outakeTop.spin(fwd, -100, pct);
-  outake2.spin(fwd, -100, pct);
+  outakeBottom.spin(fwd, -100, pct);
   outakeChainLift.spin(fwd, -100, pct);
   wait (msecs, vex::timeUnits::msec);
   outakeTop.stop(brake);
-  outake2.stop(brake);
+  outakeBottom.stop(brake);
   outakeChainLift.stop(brake);
 }
 
 void spinIntakePush(int msecs) {
   intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
-  outake2.spin(fwd, 100, pct);
+  outakeBottom.spin(fwd, 100, pct);
   driveTrain.spin(fwd, 10, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
   // intakeR.stop(brake);
-  outake2.stop(brake);
+  outakeBottom.stop(brake);
   driveTrain.stop(brake);
 }
 
@@ -388,7 +388,7 @@ void usercontrol(void) {
       intake.spin(fwd, 100, pct);
       // intakeR.spin(fwd, 100, pct);
       outakeTop.spin(fwd, 100, pct);
-      outake2.spin(fwd, 100, pct);
+      outakeBottom.spin(fwd, 100, pct);
       outakeChainLift.spin(fwd, 100, pct);
       intakeOn = true;
     } else if (CT1.ButtonR1.pressing()) {
@@ -397,14 +397,14 @@ void usercontrol(void) {
       intake.spin(fwd, -100, pct);
       // intakeR.spin(fwd, -100, pct);
       outakeTop.spin(fwd, -100, pct);
-      outake2.spin(fwd, -100, pct);
+      outakeBottom.spin(fwd, -100, pct);
       outakeChainLift.spin(fwd, -100, pct);
       intakeOn = false;
     } else if (!intakeOn) {
       intake.stop(coast);
       // intakeR.stop(coast);
       outakeTop.stop(coast);
-      outake2.stop(coast);
+      outakeBottom.stop(coast);
       outakeChainLift.stop(coast);
     }
 

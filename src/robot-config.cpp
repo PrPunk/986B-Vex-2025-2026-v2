@@ -19,7 +19,7 @@ motor R3 = motor(PORT8, ratio6_1, true);
 motor intake = motor(PORT9, ratio6_1, true);
 // motor intakeR = motor(PORT10, ratio6_1, true);
 motor outakeTop = motor(PORT20, ratio18_1, false);
-motor outake2 = motor(PORT17, ratio18_1, false);
+motor outakeBottom = motor(PORT17, ratio18_1, false);
 motor outakeChainLift = motor(PORT13, ratio18_1, true);
 
 motor_group leftSide = motor_group(L1, L2, L3);
