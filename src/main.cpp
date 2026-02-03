@@ -59,35 +59,35 @@ void stopIntake() {
 void spinIntakeOutake(int msecs) {
   intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
-  outake1.spin(fwd, 100, pct);
+  outakeTop.spin(fwd, 100, pct);
   outake2.spin(fwd, 100, pct);
   outake3.spin(fwd, 100, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
   // intakeR.stop(brake);
-  outake1.stop(brake);
+  outakeTop.stop(brake);
   outake2.stop(brake);
   outake3.stop(brake);
 }
 
 void reverseOutakeIntake(int msecs) {
   intake.spin(fwd, -100, pct);
-  outake1.spin(fwd, -100, pct);
+  outakeTop.spin(fwd, -100, pct);
   outake2.spin(fwd, -100, pct);
   outake3.spin(fwd, -100, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
-  outake1.stop(brake);
+  outakeTop.stop(brake);
   outake2.stop(brake);
   outake3.stop(brake);
 }
 
 void reverseOutake(int msecs) {
-  outake1.spin(fwd, -100, pct);
+  outakeTop.spin(fwd, -100, pct);
   outake2.spin(fwd, -100, pct);
   outake3.spin(fwd, -100, pct);
   wait (msecs, vex::timeUnits::msec);
-  outake1.stop(brake);
+  outakeTop.stop(brake);
   outake2.stop(brake);
   outake3.stop(brake);
 }
@@ -387,7 +387,7 @@ void usercontrol(void) {
       // Starts spitting out for outake
       intake.spin(fwd, 100, pct);
       // intakeR.spin(fwd, 100, pct);
-      outake1.spin(fwd, 100, pct);
+      outakeTop.spin(fwd, 100, pct);
       outake2.spin(fwd, 100, pct);
       outake3.spin(fwd, 100, pct);
       intakeOn = true;
@@ -396,14 +396,14 @@ void usercontrol(void) {
       // Stops spitting out and start sucking in for outake
       intake.spin(fwd, -100, pct);
       // intakeR.spin(fwd, -100, pct);
-      outake1.spin(fwd, -100, pct);
+      outakeTop.spin(fwd, -100, pct);
       outake2.spin(fwd, -100, pct);
       outake3.spin(fwd, -100, pct);
       intakeOn = false;
     } else if (!intakeOn) {
       intake.stop(coast);
       // intakeR.stop(coast);
-      outake1.stop(coast);
+      outakeTop.stop(coast);
       outake2.stop(coast);
       outake3.stop(coast);
     }

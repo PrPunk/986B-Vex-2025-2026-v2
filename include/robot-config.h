@@ -12,7 +12,7 @@ extern motor R1;
 extern motor R2;
 extern motor R3;
 extern motor intake;
-extern motor outake1;
+extern motor outakeTop;
 extern motor outake2;
 extern motor outake3;
 extern digital_out outakePistons;
