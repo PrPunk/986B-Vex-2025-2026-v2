@@ -29,8 +29,8 @@ double leftVeloc = 0;
 double rightVeloc = 0;
 int autonMode = 2;
 bool intakeOn = false;
-float degPerInch = 158.5127201; // old robot 47.012
-float inchPerDeg = 0.0063086; // old robot 0.1069014
+float degPerInch = 47.012; // new robot 158.5127201; // old robot 47.012
+float inchPerDeg = 0.1069014; // new robot 0.0063086; // old robot 0.1069014
 
 int getSpeed(int percentComplete) {
   return 100 - ((percentComplete^8)*(10^14));
@@ -45,25 +45,25 @@ float accelSpeed(int speed) {
 }
 
 void spinIntake() {
-  intakeL.spin(fwd, 100, pct);
+  intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
   outake2.spin(fwd, 100, pct);
 }
 
 void stopIntake() {
-  intakeL.stop(brake);
+  intake.stop(brake);
   // intakeR.stop(brake);
   outake2.stop(brake);
 }
 
 void spinIntakeOutake(int msecs) {
-  intakeL.spin(fwd, 100, pct);
+  intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
   outake1.spin(fwd, 100, pct);
   outake2.spin(fwd, 100, pct);
   outake3.spin(fwd, 100, pct);
   wait (msecs, vex::timeUnits::msec);
-  intakeL.stop(brake);
+  intake.stop(brake);
   // intakeR.stop(brake);
   outake1.stop(brake);
   outake2.stop(brake);
@@ -71,12 +71,12 @@ void spinIntakeOutake(int msecs) {
 }
 
 void reverseOutakeIntake(int msecs) {
-  intakeL.spin(fwd, -100, pct);
+  intake.spin(fwd, -100, pct);
   outake1.spin(fwd, -100, pct);
   outake2.spin(fwd, -100, pct);
   outake3.spin(fwd, -100, pct);
   wait (msecs, vex::timeUnits::msec);
-  intakeL.stop(brake);
+  intake.stop(brake);
   outake1.stop(brake);
   outake2.stop(brake);
   outake3.stop(brake);
@@ -93,12 +93,12 @@ void reverseOutake(int msecs) {
 }
 
 void spinIntakePush(int msecs) {
-  intakeL.spin(fwd, 100, pct);
+  intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
   outake2.spin(fwd, 100, pct);
   driveTrain.spin(fwd, 10, pct);
   wait (msecs, vex::timeUnits::msec);
-  intakeL.stop(brake);
+  intake.stop(brake);
   // intakeR.stop(brake);
   outake2.stop(brake);
   driveTrain.stop(brake);
@@ -269,28 +269,29 @@ void autonomous(void) {
     spinIntakeOutake(10000);
 
   } else if (autonMode == 2) {
+    turnRobot(-360, 39); //38 speeed for 90 degrees
     // Right Side Auton
-    spinIntake();
-    moveStraight(8.5, 30);
-    turnRobot(90, 30);
-    moveStraight(26.5, 35);
-    turnRobot(41, 25);
-    stopIntake();
-    moveStraight(12, 35);
-    reverseOutakeIntake(2000);
-    moveStraight(-43, 90);
-    turnRobot(140, 30);
-    intakePistons.set(1);
-    moveStraight(5, 35);
-    spinIntakePush(2500);
-    moveStraight(-15, 25);
-    intakePistons.set(0);
-    outakePistons.set(1); 
-    moveTime(2, -15);
-    spinIntakeOutake(1500);
-    reverseOutake(300);
-    spinIntakeOutake(10000);
-    
+    // spinIntake();
+    // moveStraight(8.5, 30);
+    // turnRobot(90, 30);
+    // moveStraight(26.5, 35);
+    // turnRobot(41, 25);
+    // stopIntake();
+    // moveStraight(12, 35);
+    // reverseOutakeIntake(2000);
+    // moveStraight(-43, 90);
+    // turnRobot(140, 30);
+    // intakePistons.set(1);
+    // moveStraight(5, 35);
+    // spinIntakePush(2500);
+    // moveStraight(-15, 25);
+    // intakePistons.set(0);
+    // outakePistons.set(1); 
+    // moveTime(2, -15);
+    // spinIntakeOutake(1500);
+    // reverseOutake(300);
+    // spinIntakeOutake(10000);
+
   } else if (autonMode == 3) {
     // Skills Auton
     spinIntake();
@@ -384,7 +385,7 @@ void usercontrol(void) {
     if (CT1.ButtonR2.pressing()) {
       // Starts sucking in for the intake
       // Starts spitting out for outake
-      intakeL.spin(fwd, 100, pct);
+      intake.spin(fwd, 100, pct);
       // intakeR.spin(fwd, 100, pct);
       outake1.spin(fwd, 100, pct);
       outake2.spin(fwd, 100, pct);
@@ -393,14 +394,14 @@ void usercontrol(void) {
     } else if (CT1.ButtonR1.pressing()) {
       // Stops sucking in and starts spitting out for intake
       // Stops spitting out and start sucking in for outake
-      intakeL.spin(fwd, -100, pct);
+      intake.spin(fwd, -100, pct);
       // intakeR.spin(fwd, -100, pct);
       outake1.spin(fwd, -100, pct);
       outake2.spin(fwd, -100, pct);
       outake3.spin(fwd, -100, pct);
       intakeOn = false;
     } else if (!intakeOn) {
-      intakeL.stop(coast);
+      intake.stop(coast);
       // intakeR.stop(coast);
       outake1.stop(coast);
       outake2.stop(coast);
