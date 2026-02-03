@@ -61,35 +61,35 @@ void spinIntakeOutake(int msecs) {
   // intakeR.spin(fwd, 100, pct);
   outakeTop.spin(fwd, 100, pct);
   outake2.spin(fwd, 100, pct);
-  outake3.spin(fwd, 100, pct);
+  outakeChainLift.spin(fwd, 100, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
   // intakeR.stop(brake);
   outakeTop.stop(brake);
   outake2.stop(brake);
-  outake3.stop(brake);
+  outakeChainLift.stop(brake);
 }
 
 void reverseOutakeIntake(int msecs) {
   intake.spin(fwd, -100, pct);
   outakeTop.spin(fwd, -100, pct);
   outake2.spin(fwd, -100, pct);
-  outake3.spin(fwd, -100, pct);
+  outakeChainLift.spin(fwd, -100, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
   outakeTop.stop(brake);
   outake2.stop(brake);
-  outake3.stop(brake);
+  outakeChainLift.stop(brake);
 }
 
 void reverseOutake(int msecs) {
   outakeTop.spin(fwd, -100, pct);
   outake2.spin(fwd, -100, pct);
-  outake3.spin(fwd, -100, pct);
+  outakeChainLift.spin(fwd, -100, pct);
   wait (msecs, vex::timeUnits::msec);
   outakeTop.stop(brake);
   outake2.stop(brake);
-  outake3.stop(brake);
+  outakeChainLift.stop(brake);
 }
 
 void spinIntakePush(int msecs) {
@@ -389,7 +389,7 @@ void usercontrol(void) {
       // intakeR.spin(fwd, 100, pct);
       outakeTop.spin(fwd, 100, pct);
       outake2.spin(fwd, 100, pct);
-      outake3.spin(fwd, 100, pct);
+      outakeChainLift.spin(fwd, 100, pct);
       intakeOn = true;
     } else if (CT1.ButtonR1.pressing()) {
       // Stops sucking in and starts spitting out for intake
@@ -398,14 +398,14 @@ void usercontrol(void) {
       // intakeR.spin(fwd, -100, pct);
       outakeTop.spin(fwd, -100, pct);
       outake2.spin(fwd, -100, pct);
-      outake3.spin(fwd, -100, pct);
+      outakeChainLift.spin(fwd, -100, pct);
       intakeOn = false;
     } else if (!intakeOn) {
       intake.stop(coast);
       // intakeR.stop(coast);
       outakeTop.stop(coast);
       outake2.stop(coast);
-      outake3.stop(coast);
+      outakeChainLift.stop(coast);
     }
 
     if (CT1.ButtonDown.pressing()) {

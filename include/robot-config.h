@@ -14,7 +14,7 @@ extern motor R3;
 extern motor intake;
 extern motor outakeTop;
 extern motor outake2;
-extern motor outake3;
+extern motor outakeChainLift;
 extern digital_out outakePistons;
 extern digital_out intakePistons;
 extern digital_out descoreArm;
