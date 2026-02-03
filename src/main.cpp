@@ -169,34 +169,61 @@ void moveTime(float seconds, int speed) {
 }
 
 void turnRobot(int degrees, int speed) {
-  float inchesToTurn = inchPerDeg * degrees;
+  if (degrees == 0) return;
+
+  int direction = (degrees > 0) ? 1 : -1;
+
+  float inchesToTurn = inchPerDeg * abs(degrees);
   int degreesToTurn = degPerInch * inchesToTurn;
-  degreesToTurn = abs(degreesToTurn);
+
   leftSide.resetPosition();
   rightSide.resetPosition();
-  wait(100, vex::timeUnits::msec);
-  if (degrees > 0) {
-    // Turn counterclockwise
-    while (leftSide.position(deg) <= degreesToTurn && rightSide.position(deg) >= -degreesToTurn) {
-      leftSide.spin(fwd, speed, pct);
-      rightSide.spin(fwd, -speed, pct);
-    }
-    leftSide.stop(brake);
-    rightSide.stop(brake);
-    // leftSide.spinToPosition(degreesToTurn, deg, speed, vex::velocityUnits::pct);
-    // rightSide.spinToPosition(-degreesToTurn, deg, speed, vex::velocityUnits::pct);
-  } else if (degrees < 0) {
-    // Turn clockwise
-    while (leftSide.position(deg) >= -degreesToTurn && rightSide.position(deg) <= degreesToTurn) {
-      leftSide.spin(fwd, -speed, pct);
-      rightSide.spin(fwd, speed, pct);
-    }
-    leftSide.stop(brake);
-    rightSide.stop(brake);
-    // leftSide.spinToPosition(degreesToTurn, deg, speed, vex::velocityUnits::pct);
-    // rightSide.spinToPosition(-degreesToTurn, deg, speed, vex::velocityUnits::pct);
-  };
+  wait(50, msec);
+
+  while ((abs(leftSide.position(deg)) + abs(rightSide.position(deg))) / 2 < degreesToTurn) {
+    int percent = (abs(leftSide.position(deg)) * 100) / degreesToTurn;
+    int calcSpeed = speed * (100 - percent) / 100;
+    calcSpeed = std::max(10, calcSpeed);
+
+    // Counterclockwise = positive degrees
+    leftSide.spin(fwd,  direction * calcSpeed, pct);
+    rightSide.spin(fwd, -direction * calcSpeed, pct);
+
+    wait(10, msec);
+  }
+
+  leftSide.stop(brake);
+  rightSide.stop(brake);
 }
+// void turnRobot(int degrees, int speed) {
+//   float inchesToTurn = inchPerDeg * degrees;
+//   int degreesToTurn = degPerInch * inchesToTurn;
+//   degreesToTurn = abs(degreesToTurn);
+//   leftSide.resetPosition();
+//   rightSide.resetPosition();
+//   wait(100, vex::timeUnits::msec);
+//   if (degrees > 0) {
+//     // Turn counterclockwise
+//     while (leftSide.position(deg) <= degreesToTurn && rightSide.position(deg) >= -degreesToTurn) {
+//       leftSide.spin(fwd, speed, pct);
+//       rightSide.spin(fwd, -speed, pct);
+//     }
+//     leftSide.stop(brake);
+//     rightSide.stop(brake);
+//     // leftSide.spinToPosition(degreesToTurn, deg, speed, vex::velocityUnits::pct);
+//     // rightSide.spinToPosition(-degreesToTurn, deg, speed, vex::velocityUnits::pct);
+//   } else if (degrees < 0) {
+//     // Turn clockwise
+//     while (leftSide.position(deg) >= -degreesToTurn && rightSide.position(deg) <= degreesToTurn) {
+//       leftSide.spin(fwd, -speed, pct);
+//       rightSide.spin(fwd, speed, pct);
+//     }
+//     leftSide.stop(brake);
+//     rightSide.stop(brake);
+//     // leftSide.spinToPosition(degreesToTurn, deg, speed, vex::velocityUnits::pct);
+//     // rightSide.spinToPosition(-degreesToTurn, deg, speed, vex::velocityUnits::pct);
+//   };
+// }
 
 void pre_auton(void) {
   // Initializing Robot Configuration. DO NOT REMOVE!
