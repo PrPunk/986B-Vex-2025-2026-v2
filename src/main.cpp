@@ -47,13 +47,14 @@ float accelSpeed(int speed) {
 void spinIntake() {
   intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
-  outakeBottom.spin(fwd, 100, pct);
+  // outakeBottom.spin(fwd, 100, pct);
+
 }
 
 void stopIntake() {
   intake.stop(brake);
   // intakeR.stop(brake);
-  outakeBottom.stop(brake);
+  // outakeBottom.stop(brake);
 }
 
 void spinIntakeOutake(int msecs) {
@@ -95,12 +96,12 @@ void reverseOutake(int msecs) {
 void spinIntakePush(int msecs) {
   intake.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
-  outakeBottom.spin(fwd, 100, pct);
+  // outakeBottom.spin(fwd, 100, pct);
   driveTrain.spin(fwd, 10, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
   // intakeR.stop(brake);
-  outakeBottom.stop(brake);
+  // outakeBottom.stop(brake);
   driveTrain.stop(brake);
 }
 
