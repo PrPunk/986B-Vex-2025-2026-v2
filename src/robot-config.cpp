@@ -17,7 +17,6 @@ motor R1 = motor(PORT16, ratio6_1, true);
 motor R2 = motor(PORT7, ratio6_1, true);
 motor R3 = motor(PORT8, ratio6_1, true);
 motor intake = motor(PORT9, ratio6_1, true);
-// motor intakeR = motor(PORT10, ratio6_1, true);
 motor outakeTop = motor(PORT17, ratio18_1, true);
 motor outakeBottom = motor(PORT4, ratio18_1, false);
 motor outakeChainLift = motor(PORT5, ratio18_1, false);
