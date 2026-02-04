@@ -29,6 +29,7 @@ double leftVeloc = 0;
 double rightVeloc = 0;
 int autonMode = 2;
 bool intakeOn = false;
+bool outakeOn = false;
 float degPerInch = 47.012; // new robot 158.5127201; // old robot 47.012
 float inchPerDeg = 0.1069014; // new robot 0.0063086; // old robot 0.1069014
 
@@ -252,7 +253,7 @@ void autonomous(void) {
     moveStraight(33.25, 30);
     stopIntake();
     turnRobot(100, 20);
-    outakePistons.set(1);
+    parkPistons.set(1);
     moveStraight(-15, 20);
     moveTime(0.25,-20);
     spinIntakeOutake(1500);
@@ -299,7 +300,7 @@ void autonomous(void) {
     moveStraight(32, 30);
     stopIntake();
     turnRobot(-85, 30);
-    outakePistons.set(1);
+    parkPistons.set(1);
     moveStraight(-16, 15);
     spinIntakeOutake(1500);
     moveStraight(29, 15);
@@ -367,52 +368,49 @@ void usercontrol(void) {
         leftSide.spin(fwd, int(leftVeloc), pct);
         rightSide.spin(fwd, int(rightVeloc), pct);
       }
-
-      // leftVeloc += CT1.Axis2.value()/5;
-      // rightVeloc += CT1.Axis3.value()/5;
-      // leftVeloc /= 1.2;
-      // rightVeloc /= 1.2;
-      // L1.spin(fwd, leftVeloc, pct);
-      // L2.spin(fwd, leftVeloc, pct);
-      // L3.spin(fwd, leftVeloc, pct);
-      // R1.spin(fwd, rightVeloc, pct);
-      // R2.spin(fwd, rightVeloc, pct);
-      // R3.spin(fwd, rightVeloc, pct);
-      
     }
     
     
     // Intake and outake controls
     if (CT1.ButtonR2.pressing()) {
       // Starts sucking in for the intake
-      // Starts spitting out for outake
       intake.spin(fwd, 100, pct);
-      // intakeR.spin(fwd, 100, pct);
-      outakeTop.spin(fwd, 100, pct);
-      outakeBottom.spin(fwd, 100, pct);
       outakeChainLift.spin(fwd, 100, pct);
       intakeOn = true;
     } else if (CT1.ButtonR1.pressing()) {
       // Stops sucking in and starts spitting out for intake
       // Stops spitting out and start sucking in for outake
       intake.spin(fwd, -100, pct);
-      // intakeR.spin(fwd, -100, pct);
-      outakeTop.spin(fwd, -100, pct);
-      outakeBottom.spin(fwd, -100, pct);
       outakeChainLift.spin(fwd, -100, pct);
       intakeOn = false;
     } else if (!intakeOn) {
       intake.stop(coast);
-      // intakeR.stop(coast);
-      outakeTop.stop(coast);
-      outakeBottom.stop(coast);
       outakeChainLift.stop(coast);
     }
 
+    if (CT1.ButtonL2.pressing()) {
+      // Starts spitting out for outake
+      // intakeR.spin(fwd, 100, pct);
+      outakeTop.spin(fwd, 100, pct);
+      outakeBottom.spin(fwd, 100, pct);
+      outakeOn = true;
+    } else if (CT1.ButtonL1.pressing()) {
+      // Stops sucking in and starts spitting out for intake
+      // Stops spitting out and start sucking in for outake
+      // intakeR.spin(fwd, -100, pct);
+      outakeTop.spin(fwd, -100, pct);
+      outakeBottom.spin(fwd, -100, pct);
+      outakeOn = false;
+    } else if (!outakeOn) {
+      // intakeR.stop(coast);
+      outakeTop.stop(coast);
+      outakeBottom.stop(coast);
+    }
+
     if (CT1.ButtonDown.pressing()) {
-      outakePistons.set(0);
+      parkPistons.set(0);
     } else if (CT1.ButtonUp.pressing()) {
-      outakePistons.set(1);
+      parkPistons.set(1);
     }
 
     if (CT1.ButtonX.pressing()) {
