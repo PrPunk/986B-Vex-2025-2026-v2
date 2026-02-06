@@ -288,7 +288,7 @@ void autonomous(void) {
     // intakePistons.set(1);
     // moveStraight(5, 35);
     // spinIntakePush(2500);
-    // moveStraight(-15, 25);
+    // moveStraight(-15,25);
     // intakePistons.set(0);
     // outakePistons.set(1); 
     // moveTime(2, -15);
@@ -296,9 +296,9 @@ void autonomous(void) {
     // reverseOutake(300);
     // spinIntakeOutake(10000);
     spinIntake();
-    moveStraight(28, 30);
+    moveStraight(30, 30);
     stopIntake();
-    turnRobot(-110, 50);
+    turnRobot(-115, 50);
     intakePistons.set(1);
     moveStraight(8, 20);
     moveTime(1,20);
