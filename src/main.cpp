@@ -27,7 +27,7 @@ float dSpeed = 1;
 bool slowDrive = false;
 double leftVeloc = 0;
 double rightVeloc = 0;
-int autonMode = 1;
+int autonMode = 2;
 bool intakeOn = false;
 bool outakeOn = false;
 float degPerInch = 25; // new robot 158.5127201; // old robot 47.012
@@ -305,7 +305,7 @@ void autonomous(void) {
     moveStraight(-1,20);
     //moveStraight(27, 15);
     spinIntake();
-    wait(2500,msec);
+    wait(1500,msec);
     stopIntake();
     moveStraight(-15, 15);
     
