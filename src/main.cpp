@@ -300,7 +300,7 @@ void autonomous(void) {
     stopIntake();
     turnRobot(-105, 50);
     intakePistons.set(1);
-    moveStraight(10, 20);
+    moveStraight(8, 20);
     moveTime(1,20);
     moveStraight(-1,20);
     //moveStraight(27, 15);
