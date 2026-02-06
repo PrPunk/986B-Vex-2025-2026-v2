@@ -252,7 +252,7 @@ void autonomous(void) {
   if (autonMode == 1) {
     // Left Side Auton
     spinIntake();
-    moveStraight(28, 30);
+    moveStraight(30, 30);
     stopIntake();
     turnRobot(110, 50);
     intakePistons.set(1);
@@ -261,7 +261,7 @@ void autonomous(void) {
     moveStraight(-1,20);
     //moveStraight(27, 15);
     spinIntake();
-    wait(1500,msec);
+    wait(1000,msec);
     stopIntake();
     moveStraight(-15, 15);
     
