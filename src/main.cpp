@@ -27,11 +27,11 @@ float dSpeed = 1;
 bool slowDrive = false;
 double leftVeloc = 0;
 double rightVeloc = 0;
-int autonMode = 2;
+int autonMode = 1;
 bool intakeOn = false;
 bool outakeOn = false;
-float degPerInch = 47.012; // new robot 158.5127201; // old robot 47.012
-float inchPerDeg = 0.1069014; // new robot 0.0063086; // old robot 0.1069014
+float degPerInch = 25; // new robot 158.5127201; // old robot 47.012
+float inchPerDeg = 0.0063086; // new robot 0.0063086; // old robot 0.1069014
 
 int getSpeed(int percentComplete) {
   return 100 - ((percentComplete^8)*(10^14));
@@ -271,7 +271,7 @@ void autonomous(void) {
     spinIntakeOutake(10000);
 
   } else if (autonMode == 2) {
-    turnRobot(-360, 39); //38 speeed for 90 degrees
+    moveStraight(30,50); //38 speeed for 90 degrees
     // Right Side Auton
     // spinIntake();
     // moveStraight(8.5, 30);
