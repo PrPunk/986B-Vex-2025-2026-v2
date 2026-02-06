@@ -27,11 +27,11 @@ float dSpeed = 1;
 bool slowDrive = false;
 double leftVeloc = 0;
 double rightVeloc = 0;
-int autonMode = 2;
+int autonMode = 1;
 bool intakeOn = false;
 bool outakeOn = false;
-float degPerInch = 47.012; // new robot 158.5127201; // old robot 47.012
-float inchPerDeg = 0.1069014; // new robot 0.0063086; // old robot 0.1069014
+float degPerInch = 158.5127201; // new robot 158.5127201; // old robot 47.012
+float inchPerDeg = 0.0063086; // new robot 0.0063086; // old robot 0.1069014
 
 int getSpeed(int percentComplete) {
   return 100 - ((percentComplete^8)*(10^14));
@@ -47,26 +47,20 @@ float accelSpeed(int speed) {
 
 void spinIntake() {
   intake.spin(fwd, 100, pct);
-  // intakeR.spin(fwd, 100, pct);
-  // outakeBottom.spin(fwd, 100, pct);
 
 }
 
 void stopIntake() {
   intake.stop(brake);
-  // intakeR.stop(brake);
-  // outakeBottom.stop(brake);
 }
 
 void spinIntakeOutake(int msecs) {
   intake.spin(fwd, 100, pct);
-  // intakeR.spin(fwd, 100, pct);
   outakeTop.spin(fwd, 100, pct);
   outakeBottom.spin(fwd, 100, pct);
   outakeChainLift.spin(fwd, 100, pct);
   wait (msecs, vex::timeUnits::msec);
   intake.stop(brake);
-  // intakeR.stop(brake);
   outakeTop.stop(brake);
   outakeBottom.stop(brake);
   outakeChainLift.stop(brake);
@@ -249,29 +243,20 @@ void autonomous(void) {
   // Insert autonomous user code here
   if (autonMode == 1) {
     // Left Side Auton
-    spinIntake();
+    printf("mango");
     moveStraight(33.25, 30);
-    stopIntake();
-    turnRobot(100, 20);
-    parkPistons.set(1);
-    moveStraight(-15, 20);
-    moveTime(0.25,-20);
-    spinIntakeOutake(1500);
-    turnRobot(1,1);
+    turnRobot(-90, 38);
     intakePistons.set(1);
-    //moveStraight(27, 15);
-    moveTime(2, 20);
-    spinIntakePush(2500);
-    turnRobot(-1,1);
+    moveStraight(10, 20);
+    moveTime(0.25,-20);
+    spinIntakeOutake(2500);
     moveStraight(-15, 15);
-    intakePistons.set(0);
-    moveTime(2, -15);
     spinIntakeOutake(1500);
     reverseOutake(300);
     spinIntakeOutake(10000);
 
   } else if (autonMode == 2) {
-    turnRobot(-360, 39); //38 speeed for 90 degrees
+    turnRobot(-90, 38); //38 speeed for 90 degrees
     // Right Side Auton
     // spinIntake();
     // moveStraight(8.5, 30);
