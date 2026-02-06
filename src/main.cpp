@@ -261,7 +261,7 @@ void autonomous(void) {
     moveStraight(-1,20);
     //moveStraight(27, 15);
     spinIntake();
-    wait(2500,msec);
+    wait(1500,msec);
     stopIntake();
     moveStraight(-15, 15);
     
