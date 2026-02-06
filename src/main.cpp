@@ -31,7 +31,7 @@ int autonMode = 1;
 bool intakeOn = false;
 bool outakeOn = false;
 float degPerInch = 25; // new robot 158.5127201; // old robot 47.012
-float inchPerDeg = 0.0063086; // new robot 0.0063086; // old robot 0.1069014
+float inchPerDeg = 0.09; // new robot 0.0063086; // old robot 0.1069014
 
 int getSpeed(int percentComplete) {
   return 100 - ((percentComplete^8)*(10^14));
@@ -47,6 +47,7 @@ float accelSpeed(int speed) {
 
 void spinIntake() {
   intake.spin(fwd, 100, pct);
+  outakeChainLift.spin(fwd, 100, pct);
   // intakeR.spin(fwd, 100, pct);
   // outakeBottom.spin(fwd, 100, pct);
 
@@ -54,6 +55,7 @@ void spinIntake() {
 
 void stopIntake() {
   intake.stop(brake);
+  outakeChainLift.stop(brake);
   // intakeR.stop(brake);
   // outakeBottom.stop(brake);
 }
@@ -250,28 +252,28 @@ void autonomous(void) {
   if (autonMode == 1) {
     // Left Side Auton
     spinIntake();
-    moveStraight(33.25, 30);
+    moveStraight(27, 30);
     stopIntake();
-    turnRobot(100, 20);
-    parkPistons.set(1);
-    moveStraight(-15, 20);
-    moveTime(0.25,-20);
-    spinIntakeOutake(1500);
-    turnRobot(1,1);
+    turnRobot(105, 50);
     intakePistons.set(1);
+    moveStraight(10, 20);
+    moveTime(1,20);
+    moveStraight(-1,20);
     //moveStraight(27, 15);
-    moveTime(2, 20);
-    spinIntakePush(2500);
-    turnRobot(-1,1);
+    spinIntake();
+    wait(2500,msec);
+    stopIntake();
     moveStraight(-15, 15);
+    
     intakePistons.set(0);
-    moveTime(2, -15);
+    moveTime(1, -15);
+    moveStraight(1, 20);
     spinIntakeOutake(1500);
     reverseOutake(300);
     spinIntakeOutake(10000);
 
   } else if (autonMode == 2) {
-    moveStraight(30,50); //38 speeed for 90 degrees
+    // turnRobot(90,50); //38 speeed for 90 degrees
     // Right Side Auton
     // spinIntake();
     // moveStraight(8.5, 30);
@@ -293,6 +295,26 @@ void autonomous(void) {
     // spinIntakeOutake(1500);
     // reverseOutake(300);
     // spinIntakeOutake(10000);
+    spinIntake();
+    moveStraight(27, 30);
+    stopIntake();
+    turnRobot(-105, 50);
+    intakePistons.set(1);
+    moveStraight(10, 20);
+    moveTime(1,20);
+    moveStraight(-1,20);
+    //moveStraight(27, 15);
+    spinIntake();
+    wait(2500,msec);
+    stopIntake();
+    moveStraight(-15, 15);
+    
+    intakePistons.set(0);
+    moveTime(1, -15);
+    moveStraight(1, 20);
+    spinIntakeOutake(1500);
+    reverseOutake(300);
+    spinIntakeOutake(10000);
 
   } else if (autonMode == 3) {
     // Skills Auton
