@@ -16,6 +16,7 @@ extern motor outakeTop;
 extern motor outakeBottom;
 extern motor outakeChainLift;
 extern digital_out parkPistons;
+extern digital_out ballLockPiston;
 extern digital_out intakePistons;
 extern digital_out descoreArm;
 extern digital_out pnu2;

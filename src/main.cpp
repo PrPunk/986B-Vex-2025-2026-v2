@@ -456,11 +456,17 @@ void usercontrol(void) {
       dSpeed = 1;
     }
 
-    if (CT1.ButtonY.pressing() && CT1.ButtonB.pressing()) {
-      slowDrive = true;
-    } else if (CT1.ButtonY.pressing() && CT1.ButtonX.pressing()) {
-      slowDrive = false;
+    if (CT1.ButtonY.pressing()) {
+      ballLockPiston.set(1);
+    } else if (CT1.ButtonB.pressing()) {
+      ballLockPiston.set(0);
     }
+
+    // if (CT1.ButtonY.pressing() && CT1.ButtonB.pressing()) {
+    //   slowDrive = true;
+    // } else if (CT1.ButtonY.pressing() && CT1.ButtonX.pressing()) {
+    //   slowDrive = false;
+    // }
     // This is the main execution loop for the user control program.
     // Each time through the loop your program should update motor + servo
     // values based on feedback from the joysticks.
