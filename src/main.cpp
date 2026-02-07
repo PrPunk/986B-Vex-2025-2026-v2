@@ -27,7 +27,7 @@ float dSpeed = 1;
 bool slowDrive = false;
 double leftVeloc = 0;
 double rightVeloc = 0;
-int autonMode = 2;
+int autonMode = 1;
 bool intakeOn = false;
 bool outakeOn = false;
 float degPerInch = 25; // new robot 158.5127201; // old robot 47.012
@@ -252,26 +252,23 @@ void autonomous(void) {
     spinIntake();
     moveStraight(30, 30);
     stopIntake();
-    turnRobot(110, 20);
-    parkPistons.set(1);
-    moveStraight(-15, 20);
-    moveTime(0.25,-20);
-    spinIntakeOutake(1500);
-    turnRobot(1,1);
+    turnRobot(115, 50);
     intakePistons.set(1);
-    moveStraight(10, 20);
+    moveStraight(8, 15);
     moveTime(1,20);
     moveStraight(-1,20);
     //moveStraight(27, 15);
     spinIntake();
-    wait(1000,msec);
+    wait(1500,msec);
     stopIntake();
     moveStraight(-15, 15);
     
-    intakePistons.set(0);
     moveTime(1, -15);
     moveStraight(1, 20);
     spinIntakeOutake(1500);
+    moveStraight(1, 20);
+    intakePistons.set(0);
+    moveStraight(-0.75, 20);
     reverseOutake(300);
     spinIntakeOutake(10000);
 
@@ -315,7 +312,9 @@ void autonomous(void) {
     moveTime(1, -15);
     moveStraight(1, 20);
     spinIntakeOutake(1500);
+    moveStraight(1, 20);
     intakePistons.set(0);
+    moveStraight(-1, 20);
     reverseOutake(300);
     spinIntakeOutake(10000);
 
