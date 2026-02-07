@@ -458,7 +458,7 @@ void usercontrol(void) {
 
     if (CT1.ButtonY.pressing()) {
       ballLockPiston.set(1);
-    } else if (CT1.ButtonB.pressing()) {
+    } else if (CT1.ButtonA.pressing()) {
       ballLockPiston.set(0);
     }
 
